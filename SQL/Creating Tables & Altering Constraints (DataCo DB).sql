@@ -47,64 +47,6 @@ The next step is to create a table
 -- to make the dataco_db database the active database 
 USE dataco_db;
 
-
--- To drop the table if it exists
-DROP TABLE IF EXISTS TblDataCo;
-
--- To create the table for the DataCo data
-CREATE TABLE TblDataCo (
-    DaysforShippingReal INT,
-    DaysforShipmentScheduled INT,
-    BenefitPerOrder DECIMAL(10,2),
-    SalesPerCustomer DECIMAL(10,2),
-    DeliveryStatus VARCHAR(255),
-    Late_delivery_risk INT,
-    CategoryId VARCHAR(255),
-    CategoryName VARCHAR(255),
-	CustomerCity VARCHAR(255),
-    CustomerCountry VARCHAR(255),
-    CustomerEmail VARCHAR(255),
-    CustomerFname VARCHAR(255),
-    CustomerId VARCHAR(255),
-    CustomerLname VARCHAR(255),
-    CustomerPassword VARCHAR(255),
-    CustomerSegment VARCHAR(255),
-    CustomerState VARCHAR(255),
-    CustomerStreet VARCHAR(255),
-    CustomerZipcode VARCHAR(255),
-    DepartmentId INT,
-    DepartmentName VARCHAR(255),
-    Latitude DECIMAL(10,6),
-    Longitude DECIMAL(10,6),
-    Market VARCHAR(255),
-    OrderCity VARCHAR(255),
-    OrderCountry VARCHAR(255),
-    OrderCustomerId VARCHAR(255),
-    OrderDate DATE,
-    OrderId VARCHAR(255),
-    OrderItemCardprodId VARCHAR(255),
-    OrderItemDiscount DECIMAL(10,2),
-	OrderItemDiscountRate DECIMAL(5, 2),
-    OrderItemId VARCHAR(255),
-    OrderItemProductPrice DECIMAL(10, 2),
-    OrderItemProfitRatio DECIMAL(5, 2),
-    OrderItemQuantity INT,
-    Sales DECIMAL(10, 2),
-	OrderItemTotal DECIMAL(10, 2),
-    OrderProfitPerOrder DECIMAL(10, 2),
-    OrderRegion VARCHAR(255),
-    OrderState VARCHAR(255),
-    ProductCardId VARCHAR(255),
-    ProductCategoryId VARCHAR(255),
-    ProductDescription VARCHAR(255),
-    ProductImage VARCHAR(255),
-    ProductName VARCHAR(255),
-    ProductPrice DECIMAL(10, 2),
-    ProductStatus VARCHAR(255),
-    ShippingDate DATE,
-    ShippingMode VARCHAR(255)
-);
-
 -- INSERTING DATA INTO THE CREATED TABLE
 /* 
 Currently, the dataset sits in my local device so I could either use the 
@@ -116,9 +58,12 @@ The Table Data Import Wizard was used because I was having diffulties scaling th
 "ERROR: 3948: Loading local data is disabled; this must be enabled on both the client and server sides"
 
 but this is the code to load using MySQL Command Prompt
+
+Note: Make sure to insert the desired CSV table under this path to enable this code to run under MySQL Coomand Line Client (Run as admin)
+'/ProgramData/MySQL/MySQL Server 8.0/Data/dataco_db'
 */
 
-LOAD DATA LOCAL INFILE 'C:\Users\LENOVO\Documents\Personal Project\DataCo Supply Chain Dataset.csv' -- table path
+LOAD DATA LOCAL INFILE 'C/ProgramData/MySQL/MySQL Server 8.0/Data/dataco_db/DataCo Supply Chain Dataset.csv' -- table path
 INTO TABLE TblDataCo
 FIELDS TERMINATED BY ',' -- csv file
 ENCLOSED BY '"' -- for the strings
@@ -132,7 +77,7 @@ SHOW VARIABLES LIKE 'secure_file_priv';
 SELECT *
 FROM TblDataCo;
 
--- 1) CREATE ORDERS TABLE
+--- 1) CREATE ORDERS TABLE
 
 DROP TABLE IF EXISTS Orders;
 
@@ -148,8 +93,9 @@ CREATE TABLE Orders(
     OrderCountry VARCHAR(255),
     OrderRegion VARCHAR(255),
     ShippingDate DATE,
-    DepartmentId VARCHAR(255),
-    PRIMARY KEY(OrderId)
+    DepartmentId INTEGER,
+    PRIMARY KEY(OrderId),
+    FOREIGN KEY(DepartmentId) REFERENCES Department(DepartmentId)
     );
     
 SHOW VARIABLES WHERE Variable_Name LIKE "%dir" ;
@@ -237,7 +183,7 @@ CREATE TABLE Order_Item (
 DROP TABLE IF EXISTS Department;
 
 CREATE TABLE Department (
-	DepartmentId VARCHAR(255),
+	DepartmentId INT,
     DepartmentName VARCHAR(255),
     PRIMARY KEY (DepartmentId)
     );
